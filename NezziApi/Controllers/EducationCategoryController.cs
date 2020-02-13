@@ -19,16 +19,16 @@ namespace NezziApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<EducationCategory> GetCategory()
+        public IEnumerable<EducationCategory> GetEducationCategory()
         {
-            var categories = repository.GetCategory();
+            var categories = repository.GetEducationCategory();
             return categories;
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<EducationCategory> GetCategoryById(int id)
+        public IEnumerable<EducationCategory> GetEducationCategoryById(int id)
         {
-            var category = repository.GetCategoryById(id);
+            var category = repository.GetEducationCategoryById(id);
             return category;
         }
     }

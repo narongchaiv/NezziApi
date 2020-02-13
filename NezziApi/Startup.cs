@@ -62,7 +62,7 @@ namespace NezziApi
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEducationCategoryRepository, CategoryRepository>();
+            services.AddScoped<IEducationCategoryRepository, EducationCategoryRepository>();
 
             var mappingConfig = new MapperConfiguration(mc =>
             {

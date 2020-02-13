@@ -10,23 +10,23 @@ using NezziApi.Mapping.Model;
 namespace NezziApi.Controllers
 {
     [Route("/api/category")]
-    public class CategoryController : Controller
+    public class EducationCategoryController : Controller
     {
-        private readonly ICategoryRepository repository;
-        public CategoryController(ICategoryRepository repository)
+        private readonly IEducationCategoryRepository repository;
+        public EducationCategoryController(IEducationCategoryRepository repository)
         {
             this.repository = repository;
         }
 
         [HttpGet]
-        public IQueryable<Category> GetCategory()
+        public IEnumerable<EducationCategory> GetCategory()
         {
             var categories = repository.GetCategory();
             return categories;
         }
 
         [HttpGet("{id}")]
-        public IQueryable<Category> GetCategoryById(int id)
+        public IEnumerable<EducationCategory> GetCategoryById(int id)
         {
             var category = repository.GetCategoryById(id);
             return category;

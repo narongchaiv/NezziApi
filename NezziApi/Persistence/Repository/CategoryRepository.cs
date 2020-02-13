@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NezziApi.Persistence.Repository
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : IEducationCategoryRepository
     {
         private readonly IMapper mapper;
         private readonly NezziDbContext context;
@@ -17,16 +17,16 @@ namespace NezziApi.Persistence.Repository
             this.mapper = mapper;
             this.context = context;
         }
-        public IQueryable<Category> GetCategory()
+        public IEnumerable<EducationCategory> GetCategory()
         {
-            var categories = context.Category;
+            var categories = context.EducationCategory.ToList();
 
             return categories;
         }
 
-        public IQueryable<Category> GetCategoryById(int id)
+        public IEnumerable<EducationCategory> GetCategoryById(int id)
         {
-            var category = context.Category.Where(c => c.Id == id);
+            var category = context.EducationCategory.Where(c => c.Id == id);
             return category;
         }
     }

@@ -14,6 +14,6 @@ namespace NezziApi.Persistence
 
         }
 
-        public DbSet<Category> Category { get; set; }
+        public DbSet<EducationCategory> EducationCategory { get; set; }
     }
 }

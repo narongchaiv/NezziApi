@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace NezziApi.Interface
 {
-    public interface ICategoryRepository
+    public interface IEducationCategoryRepository
     {
-        IQueryable<Category> GetCategory();
+        IEnumerable<EducationCategory> GetCategory();
 
-        IQueryable<Category> GetCategoryById(int id);
+        IEnumerable<EducationCategory> GetCategoryById(int id);
 
     }
 }

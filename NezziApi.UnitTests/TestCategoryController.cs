@@ -31,7 +31,7 @@ namespace NezziApi.UnitTests
 
             educationCategories.Add(eduCategory);
 
-            _repository.Setup(r => r.GetEducationCategory()).Returns(educationCategories);
+            _repository.Setup(r => r.GetEducationCategories()).Returns(educationCategories);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace NezziApi.UnitTests
         {
             var controller = new EducationCategoryController(_repository.Object);
 
-            var result = controller.GetEducationCategory();
+            var result = controller.GetEducationCategories();
 
             Assert.AreEqual(result, educationCategories);
         }
@@ -65,13 +65,13 @@ namespace NezziApi.UnitTests
 
             educationCategories.Add(category1);
 
-            _repository.Setup(r => r.GetEducationCategoryById(1)).Returns(educationCategories.Where(c=>c.Id == 1));
+            _repository.Setup(r => r.GetEducationCategory(1)).Returns(educationCategories.SingleOrDefault(c=>c.Id == 1));
 
             var controller = new EducationCategoryController(_repository.Object);
 
-            var result = controller.GetEducationCategoryById(1);
+            var result = controller.GetEducationCategory(1);
 
-            Assert.AreEqual(result, educationCategories.Where(c => c.Id == 1));
+            Assert.AreEqual(result, educationCategories.SingleOrDefault(c => c.Id == 1));
         }
     }
 }

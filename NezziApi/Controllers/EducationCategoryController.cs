@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NezziApi.Interface;
 using NezziApi.Mapping.Model;
 
 namespace NezziApi.Controllers
 {
-    [Route("/api/category")]
+    [Route("/api/educationcategory")]
     public class EducationCategoryController : Controller
     {
         private readonly IEducationCategoryRepository repository;
@@ -19,17 +22,51 @@ namespace NezziApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<EducationCategory> GetEducationCategory()
+        public IEnumerable<EducationCategory> GetEducationCategories()
         {
-            var categories = repository.GetEducationCategory();
+            var categories = repository.GetEducationCategories();
             return categories;
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<EducationCategory> GetEducationCategoryById(int id)
+        public IActionResult GetEducationCategory(int id)
         {
-            var category = repository.GetEducationCategoryById(id);
-            return category;
+            var category = repository.GetEducationCategory(id);
+
+            if (category == null)
+               return NotFound();
+
+            return Ok(category);
         }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult CreateEducationCategory([FromBody]EducationCategory educationCategory)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            educationCategory = repository.CreateEducationCategory(educationCategory);
+            return CreatedAtAction(nameof(GetEducationCategory), new { id = educationCategory.Id }, educationCategory);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdateEducationCategory(int id, [FromBody]EducationCategory educationCategory)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            return Ok(repository.UpdateEducationCategory(id, educationCategory));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteEducationCategory(int id)
+        {
+            return Ok(repository.DeleteEducationCategory(id));
+        }
+
     }
 }

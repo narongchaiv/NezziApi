@@ -8,10 +8,14 @@ namespace NezziApi.Interface
 {
     public interface IEducationCategoryRepository
     {
-        IEnumerable<EducationCategory> GetEducationCategory();
+        IEnumerable<EducationCategory> GetEducationCategories();
 
-        IEnumerable<EducationCategory> GetEducationCategoryById(int id);
+        EducationCategory GetEducationCategory(int id);
 
-        //IEnumerable<EducationCategory> CreateEducationCategory(int id);
+        EducationCategory CreateEducationCategory(EducationCategory educationCategory);
+
+        string UpdateEducationCategory(int id, EducationCategory educationCategory);
+
+        string DeleteEducationCategory(int id);
     }
 }

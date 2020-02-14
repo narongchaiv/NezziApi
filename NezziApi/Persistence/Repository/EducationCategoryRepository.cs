@@ -17,17 +17,53 @@ namespace NezziApi.Persistence.Repository
             this.mapper = mapper;
             this.context = context;
         }
-        public IEnumerable<EducationCategory> GetEducationCategory()
+        public IEnumerable<EducationCategory> GetEducationCategories()
         {
             var categories = context.EducationCategories.ToList();
 
             return categories;
         }
 
-        public IEnumerable<EducationCategory> GetEducationCategoryById(int id)
+        public EducationCategory GetEducationCategory(int id)
         {
-            var category = context.EducationCategories.Where(c => c.Id == id);
+            var category = context.EducationCategories.SingleOrDefault(e => e.Id == id);
             return category;
+        }
+
+        public EducationCategory CreateEducationCategory(EducationCategory educationCategory)
+        {
+            context.EducationCategories.Add(educationCategory);
+            context.SaveChanges();
+
+            return educationCategory;
+        }
+
+        public string UpdateEducationCategory(int id, EducationCategory educationCategory)
+        {
+            var educationCategoryInDb = context.EducationCategories.SingleOrDefault(e => e.Id == id);
+
+            if (educationCategoryInDb != null)
+            {
+                educationCategoryInDb.Name = educationCategory.Name;
+                educationCategoryInDb.Priority = educationCategory.Priority;
+                context.SaveChanges();
+
+                return "Success";
+            }
+            return "Fail";
+        }
+
+        public string DeleteEducationCategory(int id)
+        {
+            var educationCategoryInDb = context.EducationCategories.SingleOrDefault(e => e.Id == id);
+
+            if (educationCategoryInDb != null)
+            {
+                context.Remove(educationCategoryInDb);
+                context.SaveChanges();
+                return "Success";
+            }
+            return "Fail";
         }
     }
 }

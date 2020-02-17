@@ -52,6 +52,7 @@ namespace NezziApi.Controllers
             return CreatedAtAction(nameof(GetEducationCategory), new { id = educationCategory.Id }, educationCategory);
         }
 
+
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult UpdateEducationCategory(int id, [FromBody]EducationCategory educationCategory)

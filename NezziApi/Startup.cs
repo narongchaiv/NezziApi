@@ -26,6 +26,8 @@ using NezziApi.Controllers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System.Net.NetworkInformation;
 
 namespace NezziApi
 {
@@ -80,7 +82,35 @@ namespace NezziApi
             services.AddDbContext<NezziDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("NezziConnection")));
 
-           
+            services.AddHealthChecks()
+                //.AddCheck("Foo", () =>
+                //HealthCheckResult.Healthy("Foo is Ok!"), tags: new[] { "foo_tag" })
+                //.AddCheck("Bar", () =>
+                //HealthCheckResult.Healthy("Bar is NOk!"), tags: new[] { "bar_tag" })
+                .AddCheck("Ping", () => {
+                    try
+                    {
+                        using (var ping = new Ping())
+                        {
+                            var reply = ping.Send("localhost");
+                            if(reply.Status != IPStatus.Success)
+                            {
+                                return HealthCheckResult.Unhealthy();
+                            }
+                            if (reply.RoundtripTime > 100)
+                            {
+                                return HealthCheckResult.Degraded();
+                            }
+                            return HealthCheckResult.Healthy();
+                        }
+                    }
+                    catch
+                    {
+                        return HealthCheckResult.Unhealthy();
+                    }
+                })
+                .AddCheck<ExampleHealthCheck>("sample", null, new[] { "sample"});
+
 
             services.AddSingleton(mapper);
 
@@ -107,6 +137,38 @@ namespace NezziApi
                 endpoints.MapControllers();
             });
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                    );
+                endpoints.MapControllerRoute(
+                    name: "api",
+                    pattern: "api/{controller=Home}/{action=Index}/{id?}"
+                    );
+                endpoints.MapHealthChecks("/health");
+            });
+
+        }
+
+        public class ExampleHealthCheck : IHealthCheck
+        {
+            public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+            {
+                var healthCheckResultHealthy = true;
+
+                if (healthCheckResultHealthy)
+                {
+                    return Task.FromResult(
+                            HealthCheckResult.Healthy("A healthy result.")
+                        );
+                }
+
+                return Task.FromResult(
+                            HealthCheckResult.Unhealthy("A unhealthy result.")
+                        );
+            }
         }
     }
 }
